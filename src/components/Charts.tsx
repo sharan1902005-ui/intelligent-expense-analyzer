@@ -51,7 +51,7 @@ export default function Charts({ transactions }: Props) {
             paddingAngle={4}
             dataKey="value"
             label={({ name, percent }) =>
-              `${name} ${(percent * 100).toFixed(0)}%`
+              `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
             }
           >
             {data.map((_, index) => (
@@ -59,7 +59,7 @@ export default function Charts({ transactions }: Props) {
             ))}
           </Pie>
 
-          <Tooltip formatter={(value: number) => `₹${value.toFixed(2)}`} />
+          <Tooltip formatter={(value) => `₹${Number(value).toFixed(2)}`} />
 
           <Legend />
         </PieChart>
