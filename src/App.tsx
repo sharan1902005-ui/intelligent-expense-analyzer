@@ -6,6 +6,11 @@ import LoadingScreen from "./components/LoadingScreen";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "pink");
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,8 +25,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/" element={<LandingPage theme={theme} setTheme={setTheme} />} />
+        <Route path="/dashboard" element={<DashboardPage theme={theme} setTheme={setTheme} />} />
       </Routes>
     </BrowserRouter>
   );

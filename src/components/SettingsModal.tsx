@@ -11,6 +11,8 @@ interface Props {
   onClose: () => void;
   theme: string;
   setTheme: (theme: string) => void;
+  budget: number | "";
+  setBudget: (value: number | "") => void;
 }
 
 export default function SettingsModal({
@@ -18,6 +20,8 @@ export default function SettingsModal({
   onClose,
   theme,
   setTheme,
+  budget,
+  setBudget,
 }: Props) {
   if (!open) return null;
 
@@ -123,7 +127,15 @@ export default function SettingsModal({
 
           <input
             type="number"
-            placeholder="Enter budget amount"
+            value={budget}
+            onChange={(e) =>
+              setBudget(
+                e.target.value === ""
+                  ? ""
+                  : Number(e.target.value)
+              )
+            }
+            placeholder="Enter monthly budget"
             className="w-full px-5 py-4 rounded-2xl border border-pink-100 bg-white outline-none focus:ring-2 focus:ring-pink-300"
           />
         </div>

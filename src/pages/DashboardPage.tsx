@@ -1,10 +1,15 @@
 import Dashboard from "../components/Dashboard";
 import PageTransition from "../components/PageTransition";
 
-export default function DashboardPage() {
+interface Props {
+  theme: string;
+  setTheme: (theme: string) => void;
+}
+
+export default function DashboardPage({ theme, setTheme }: Props) {
   return (
     <PageTransition>
-      <Dashboard />
+      <Dashboard theme={theme} setTheme={setTheme} />
     </PageTransition>
   );
 }

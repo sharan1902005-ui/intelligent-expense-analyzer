@@ -1,8 +1,5 @@
-import {
-  Bell,
-  Search,
-  Settings,
-} from "lucide-react";
+import { Bell, Search, Settings, Download } from "lucide-react";
+import { useState } from "react";
 import type { Transaction } from "../types";
 
 interface Props {
@@ -10,6 +7,7 @@ interface Props {
   setSearchQuery: (value: string) => void;
   transactions: Transaction[];
   onOpenSettings: () => void;
+  exportPdfReport: () => void;
 }
 
 export default function TopNavbar({
@@ -17,7 +15,9 @@ export default function TopNavbar({
   setSearchQuery,
   transactions,
   onOpenSettings,
+  exportPdfReport,
 }: Props) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
     <header className="bg-white/80 backdrop-blur-2xl border border-pink-100 rounded-3xl shadow-xl px-6 md:px-8 py-5">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
@@ -57,24 +57,46 @@ export default function TopNavbar({
             )}
           </button>
 
-          {/* Settings */}
-          <button
-            onClick={onOpenSettings}
-            className="p-4 rounded-2xl bg-pink-50 border border-pink-100 hover:bg-pink-100 transition"
-          >
-            <Settings size={20} className="text-pink-500" />
-          </button>
-
-
           {/* Profile */}
-          <div className="flex items-center gap-3 bg-white border border-pink-100 rounded-2xl px-4 py-3 shadow-sm">
-            <div className="w-11 h-11 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold">
-              S
+          <div className="relative">
+            <div
+              className="flex items-center gap-3 bg-white border border-pink-100 rounded-2xl px-4 py-3 shadow-sm cursor-pointer"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              <div className="w-11 h-11 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold">
+                S
+              </div>
+              <div className="hidden md:block">
+                <p className="font-semibold text-slate-800">Smart User</p>
+                <p className="text-xs text-gray-500">Premium Plan</p>
+              </div>
             </div>
-            <div className="hidden md:block">
-              <p className="font-semibold text-slate-800">Smart User</p>
-              <p className="text-xs text-gray-500">Premium Plan</p>
-            </div>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 top-16 bg-white rounded-3xl shadow-2xl border border-pink-100 p-3 w-64 z-50">
+                <button
+                  onClick={() => { onOpenSettings(); setDropdownOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-pink-50 transition text-slate-700"
+                >
+                  <Settings size={18} />
+                  Settings
+                </button>
+
+                <button
+                  onClick={() => { exportPdfReport(); setDropdownOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-pink-50 transition text-slate-700"
+                >
+                  <Download size={18} />
+                  Export PDF Report
+                </button>
+
+                <button
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-red-50 transition text-red-500"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

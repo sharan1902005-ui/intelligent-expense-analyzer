@@ -10,9 +10,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 interface Props {
   onImport: (transactions: Transaction[]) => void;
+  mode?: "csv" | "pdf" | "both";
 }
 
-export default function DataInput({ onImport }: Props) {
+export default function DataInput({ onImport, mode = "both" }: Props) {
   const handleCSV = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -96,6 +97,30 @@ export default function DataInput({ onImport }: Props) {
       alert("Failed to read PDF");
     }
   };
+
+  if (mode === "csv") return (
+    <label className="cursor-pointer">
+      <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 h-full">
+        <div className="text-4xl mb-4">📊</div>
+        <h3 className="text-xl font-semibold text-slate-800">CSV Upload</h3>
+        <p className="text-gray-500 text-sm mt-2">Import spreadsheet transactions</p>
+        <div className="mt-5 px-4 py-3 rounded-2xl bg-pink-50 border border-pink-100 text-gray-500 text-sm">Select CSV file...</div>
+      </div>
+      <input type="file" accept=".csv" className="hidden" onChange={handleCSV} />
+    </label>
+  );
+
+  if (mode === "pdf") return (
+    <label className="cursor-pointer">
+      <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 h-full">
+        <div className="text-4xl mb-4">📄</div>
+        <h3 className="text-xl font-semibold text-slate-800">PDF Statement</h3>
+        <p className="text-gray-500 text-sm mt-2">Upload bank statement PDF</p>
+        <div className="mt-5 px-4 py-3 rounded-2xl bg-pink-50 border border-pink-100 text-gray-500 text-sm">Select PDF file...</div>
+      </div>
+      <input type="file" accept=".pdf" className="hidden" onChange={handlePDF} />
+    </label>
+  );
 
   return (
     <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8 mb-6">

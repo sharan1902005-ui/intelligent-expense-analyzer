@@ -8,21 +8,77 @@ import {
 } from "recharts";
 import type { Transaction } from "../types";
 
-interface Props {
-  transactions: Transaction[];
-}
-
 const COLORS = [
   "#ec4899",
   "#f472b6",
   "#fb7185",
-  "#8b5cf6",
-  "#3b82f6",
-  "#10b981",
-  "#f59e0b",
+  "#c084fc",
+  "#60a5fa",
+  "#34d399",
 ];
 
-export default function Charts({ transactions }: Props) {
+function ExpensePieChart({
+  data,
+}: {
+  data: { name: string; value: number }[];
+}) {
+  const filteredData = data.filter((item) => item.value > 0);
+
+  return (
+    <div className="bg-white rounded-3xl shadow-lg border border-pink-100 p-6">
+      <h2 className="text-3xl font-bold text-slate-800">
+        Category Distribution
+      </h2>
+
+      <p className="text-gray-500 mt-1">Where your money goes</p>
+
+      <div className="h-[420px] mt-6">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={filteredData}
+              cx="50%"
+              cy="45%"
+              innerRadius={90}
+              outerRadius={130}
+              paddingAngle={4}
+              dataKey="value"
+              cornerRadius={10}
+            >
+              {filteredData.map((_, index) => (
+                <Cell
+                  key={index}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+
+            <Tooltip
+              formatter={(value: number) =>
+                `₹${Number(value).toLocaleString()}`
+              }
+              contentStyle={{
+                borderRadius: "16px",
+                border: "1px solid #fbcfe8",
+              }}
+            />
+
+            <Legend
+              verticalAlign="bottom"
+              iconType="circle"
+              wrapperStyle={{
+                paddingTop: 20,
+                fontSize: "14px",
+              }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+
+export default function Charts({ transactions }: { transactions: Transaction[] }) {
   const expenses = transactions.filter((t) => t.type === "expense");
 
   const grouped = expenses.reduce((acc, tx) => {
@@ -32,38 +88,5 @@ export default function Charts({ transactions }: Props) {
 
   const data = Object.entries(grouped).map(([name, value]) => ({ name, value }));
 
-  return (
-    <div className="bg-white/90 rounded-3xl shadow-lg p-6 border border-pink-100">
-      <h2 className="text-2xl font-bold text-slate-800 mb-2">
-        Category Distribution
-      </h2>
-
-      <p className="text-gray-500 mb-6">Where your money goes</p>
-
-      <ResponsiveContainer width="100%" height={320}>
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="45%"
-            innerRadius={90}
-            outerRadius={140}
-            paddingAngle={4}
-            dataKey="value"
-            label={({ name, percent }) =>
-              `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-            }
-          >
-            {data.map((_, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-
-          <Tooltip formatter={(value) => `₹${Number(value).toFixed(2)}`} />
-
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
-  );
+  return <ExpensePieChart data={data} />;
 }

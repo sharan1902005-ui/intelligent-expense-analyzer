@@ -2,9 +2,10 @@ import type { Transaction } from "../types";
 
 interface Props {
   transactions: Transaction[];
+  budget?: number;
 }
 
-export default function SummaryCards({ transactions }: Props) {
+export default function SummaryCards({ transactions, budget = 0 }: Props) {
   const expenses = transactions.filter((t) => t.type === "expense");
   const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
 
@@ -40,6 +41,13 @@ export default function SummaryCards({ transactions }: Props) {
       <div className="bg-white/90 backdrop-blur-2xl border border-pink-100 shadow-lg rounded-3xl p-6">
         <h3 className="text-gray-500">Top Category</h3>
         <p className="text-3xl font-bold text-pink-600 mt-4">{topCategory}</p>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-lg border border-pink-100 p-6">
+        <p className="text-gray-500">Monthly Budget</p>
+        <h2 className="text-3xl font-bold text-purple-600 mt-2">
+          ₹{budget.toLocaleString()}
+        </h2>
       </div>
     </div>
   );

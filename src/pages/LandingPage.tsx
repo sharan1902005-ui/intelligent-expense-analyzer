@@ -1,18 +1,13 @@
 import { Wallet, Brain, TrendingUp, Bell, FileText, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useThemeContext } from "../context/ThemeContext";
-import ThemeSwitcher from "../components/ThemeSwitcher";
 import PageTransition from "../components/PageTransition";
 
-const bgThemes = {
-  lavender: "bg-gradient-to-br from-pink-50 via-white to-rose-100",
-  pink: "bg-gradient-to-br from-pink-50 via-white to-rose-100",
-  blue: "bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-100",
-  dark: "bg-gradient-to-br from-slate-900 to-slate-800",
-};
+interface Props {
+  theme: string;
+  setTheme: (theme: string) => void;
+}
 
-export default function LandingPage() {
-  const { theme } = useThemeContext();
+export default function LandingPage({ theme }: Props) {
   const features = [
     { icon: <Wallet size={28} />, title: "Smart Expense Tracking", desc: "Upload PDF or CSV statements and analyze spending instantly." },
     { icon: <Brain size={28} />, title: "AI Insights", desc: "Get smart financial suggestions based on your spending habits." },
@@ -24,12 +19,17 @@ export default function LandingPage() {
 
   return (
     <PageTransition>
-      <div className={`min-h-screen ${bgThemes[theme]}`}>
+      <div className={`min-h-screen ${
+        theme === "pink"
+          ? "bg-gradient-to-br from-pink-50 via-white to-rose-100"
+          : theme === "lavender"
+          ? "bg-gradient-to-br from-purple-50 via-fuchsia-50 to-violet-100"
+          : "bg-gradient-to-br from-blue-50 via-cyan-50 to-sky-100"
+      }`}>
         <nav className="flex justify-between items-center px-10 py-6">
           <h1 className="text-3xl font-bold text-pink-600">SmartSpend AI</h1>
 
           <div className="flex items-center gap-4">
-            <ThemeSwitcher />
             <Link
               to="/dashboard"
               className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-2xl shadow-md hover:scale-105 transition"
