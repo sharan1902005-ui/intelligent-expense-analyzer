@@ -4,6 +4,7 @@ import type { Transaction } from "../types";
 
 interface Props {
   transactions: Transaction[];
+  defaultOpen?: boolean;
 }
 
 interface Message {
@@ -11,9 +12,9 @@ interface Message {
   text: string;
 }
 
-export default function ExpenseChatBot({ transactions }: Props) {
+export default function ExpenseChatBot({ transactions, defaultOpen = false }: Props) {
   const username = localStorage.getItem("username") || "there";
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [messages, setMessages] = useState<Message[]>([
     { sender: "bot", text: `Hi ${username} 👋 I'm your SmartSpend AI assistant. Ask about your spending.` },
   ]);
@@ -87,13 +88,13 @@ export default function ExpenseChatBot({ transactions }: Props) {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-8 right-8 z-[9999] w-16 h-16 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 shadow-2xl flex items-center justify-center text-white hover:scale-110 transition"
+        className="fixed bottom-8 right-4 md:right-8 z-[9999] w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 shadow-2xl flex items-center justify-center text-white hover:scale-110 transition"
       >
         {open ? <X size={28} /> : <MessageCircle size={28} />}
       </button>
 
       {open && (
-        <div className="fixed bottom-28 right-8 z-[9999] w-[420px] h-[600px] bg-white rounded-3xl shadow-2xl border border-pink-100 flex flex-col overflow-hidden">
+        <div className="fixed bottom-28 right-4 md:right-8 z-[9999] w-[92vw] md:w-[420px] h-[75vh] md:h-[600px] bg-white rounded-3xl shadow-2xl border border-pink-100 flex flex-col overflow-hidden">
           <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-5">
             <h2 className="text-xl font-bold">SmartSpend AI 🤖</h2>
             <p className="text-sm opacity-90">Your finance assistant</p>

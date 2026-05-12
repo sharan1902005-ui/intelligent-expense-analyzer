@@ -98,22 +98,57 @@ export default function DataInput({ onImport }: Props) {
   };
 
   return (
-    <div className="bg-white/90 backdrop-blur-2xl border border-pink-100 shadow-lg rounded-3xl px-8 py-6 mb-6">
-      <h2 className="text-2xl font-bold text-slate-800 mb-4">Import Transactions</h2>
+    <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8 mb-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-3xl font-bold text-slate-800">Import Transactions</h2>
+          <p className="text-gray-500 mt-1">Upload your statement securely</p>
+        </div>
+        <div className="text-sm px-4 py-2 rounded-2xl bg-pink-50 text-pink-600 font-medium">
+          Secure Upload
+        </div>
+      </div>
 
-      <div className="flex gap-4 flex-wrap">
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleCSV}
-          className="bg-white border border-pink-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-300"
-        />
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handlePDF}
-          className="bg-white border border-pink-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-300"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* CSV */}
+        <label className="cursor-pointer group">
+          <div className="border border-pink-100 bg-gradient-to-br from-white to-pink-50 rounded-3xl p-6 hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-pink-100 flex items-center justify-center text-3xl">
+                📊
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-slate-800">CSV Upload</h3>
+                <p className="text-gray-500 text-sm">Import spreadsheet transactions</p>
+              </div>
+            </div>
+            <div className="mt-5 px-4 py-3 rounded-2xl bg-white border border-pink-100 text-gray-600 text-sm truncate">
+              Select CSV file...
+            </div>
+          </div>
+          <input type="file" accept=".csv" className="hidden" onChange={handleCSV} />
+        </label>
+
+        {/* PDF */}
+        <label className="cursor-pointer group">
+          <div className="border border-pink-100 bg-gradient-to-br from-white to-pink-50 rounded-3xl p-6 hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-pink-100 flex items-center justify-center text-3xl">
+                📄
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-slate-800">PDF Statement</h3>
+                <p className="text-gray-500 text-sm">Upload bank statement PDF</p>
+              </div>
+            </div>
+            <div className="mt-5 px-4 py-3 rounded-2xl bg-white border border-pink-100 text-gray-600 text-sm truncate">
+              Select PDF file...
+            </div>
+          </div>
+          <input type="file" accept=".pdf" className="hidden" onChange={handlePDF} />
+        </label>
+
       </div>
     </div>
   );

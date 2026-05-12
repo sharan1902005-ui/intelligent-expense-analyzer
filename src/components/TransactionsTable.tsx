@@ -12,7 +12,7 @@ export default function TransactionsTable({ transactions }: Props) {
     <div className="bg-white/90 backdrop-blur-2xl border border-pink-100 shadow-lg rounded-3xl p-6">
       <h2 className="text-2xl font-bold text-slate-800 mb-6">Transactions</h2>
 
-      <div className="overflow-auto">
+      <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="text-left border-b border-pink-100">

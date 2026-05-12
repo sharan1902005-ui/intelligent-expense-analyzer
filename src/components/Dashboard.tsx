@@ -12,20 +12,16 @@ import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 import SettingsModal from "./SettingsModal";
 import type { Transaction } from "../types";
-import { useThemeContext } from "../context/ThemeContext";
-
-const bgThemes = {
-  lavender: "bg-gradient-to-br from-pink-50 via-white to-rose-100",
-  pink: "bg-gradient-to-br from-pink-50 via-white to-rose-100",
-  blue: "bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-100",
-  dark: "bg-gradient-to-br from-slate-900 to-slate-800",
-};
 
 export default function Dashboard() {
-  const { theme } = useThemeContext();
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [searchQuery, setSearchQuery] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "pink");
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     const saved = localStorage.getItem("transactions");
@@ -52,9 +48,15 @@ export default function Dashboard() {
   if (transactions.length === 0) {
     return (
       <>
-        <div className={`min-h-screen ${bgThemes[theme]} flex`}>
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onSettingsOpen={() => setSettingsOpen(true)} />
-          <div className="flex-1 p-8">
+        <div className={`min-h-screen md:flex ${
+          theme === "pink"
+            ? "bg-gradient-to-br from-pink-50 via-white to-rose-100"
+            : theme === "lavender"
+            ? "bg-gradient-to-br from-purple-50 via-white to-fuchsia-100"
+            : "bg-gradient-to-br from-blue-50 via-white to-cyan-100"
+        }`}>
+          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <div className="flex-1 p-6 md:p-8 md:ml-0">
             <TopNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} transactions={transactions} onOpenSettings={() => setSettingsOpen(true)} />
             <div className="h-[70vh] flex items-center justify-center">
               <div className="bg-white/90 border border-pink-100 rounded-3xl shadow-xl p-12 text-center">
@@ -67,7 +69,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+        <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} theme={theme} setTheme={setTheme} />
         <ExpenseChatBot transactions={transactions} />
       </>
     );
@@ -75,10 +77,16 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className={`min-h-screen ${bgThemes[theme]} flex`}>
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onSettingsOpen={() => setSettingsOpen(true)} />
+      <div className={`min-h-screen md:flex ${
+        theme === "pink"
+          ? "bg-gradient-to-br from-pink-50 via-white to-rose-100"
+          : theme === "lavender"
+          ? "bg-gradient-to-br from-purple-50 via-white to-fuchsia-100"
+          : "bg-gradient-to-br from-blue-50 via-white to-cyan-100"
+      }`}>
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <div className="flex-1 p-8 overflow-auto">
+        <div className="flex-1 p-6 md:p-8 md:ml-0 overflow-auto">
           <TopNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} transactions={transactions} onOpenSettings={() => setSettingsOpen(true)} />
 
           <div className="mt-8">
@@ -114,7 +122,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} theme={theme} setTheme={setTheme} />
       <ExpenseChatBot transactions={transactions} />
     </>
   );

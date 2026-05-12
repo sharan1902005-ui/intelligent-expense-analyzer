@@ -40,7 +40,7 @@ export default function Charts({ transactions }: Props) {
 
       <p className="text-gray-500 mb-6">Where your money goes</p>
 
-      <ResponsiveContainer width="100%" height={420}>
+      <ResponsiveContainer width="100%" height={320}>
         <PieChart>
           <Pie
             data={data}

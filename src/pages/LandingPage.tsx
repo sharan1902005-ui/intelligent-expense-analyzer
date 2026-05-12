@@ -40,19 +40,19 @@ export default function LandingPage() {
         </nav>
 
         <section className="text-center px-6 py-20">
-          <h2 className="text-6xl font-bold text-slate-800 leading-tight">
+          <h2 className="text-3xl md:text-6xl font-bold text-slate-800 leading-tight">
             Your Intelligent
             <span className="bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
               {" "}Expense Analyzer
             </span>
           </h2>
 
-          <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mt-6 text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
             Track expenses, analyze spending habits, get AI insights, manage
             budgets, and export reports — all in one beautiful app.
           </p>
 
-          <div className="mt-10 flex justify-center gap-4">
+          <div className="mt-10 flex flex-col md:flex-row justify-center gap-4">
             <Link
               to="/dashboard"
               className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-2xl shadow-lg hover:scale-105 transition"

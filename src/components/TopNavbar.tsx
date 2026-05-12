@@ -1,6 +1,8 @@
-import { Bell, Search } from "lucide-react";
-import { useState } from "react";
-import NotificationPanel from "./NotificationPanel";
+import {
+  Bell,
+  Search,
+  Settings,
+} from "lucide-react";
 import type { Transaction } from "../types";
 
 interface Props {
@@ -10,83 +12,72 @@ interface Props {
   onOpenSettings: () => void;
 }
 
-export default function TopNavbar({ searchQuery, setSearchQuery, transactions, onOpenSettings }: Props) {
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  const expenses = transactions.filter((t) => t.type === "expense");
-  const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
-  const topExpense = [...expenses].sort((a, b) => b.amount - a.amount)[0];
-
-  const notifications = [
-    totalSpent > 10000 ? "🚨 Budget warning: Spending exceeded ₹10,000" : "",
-    topExpense ? `💸 Largest expense: ₹${topExpense.amount} at ${topExpense.merchant}` : "",
-    "📥 Recent transactions imported successfully",
-  ].filter(Boolean);
-
+export default function TopNavbar({
+  searchQuery,
+  setSearchQuery,
+  transactions,
+  onOpenSettings,
+}: Props) {
   return (
-    <div className="relative bg-white/90 backdrop-blur-2xl border border-pink-100 rounded-3xl shadow-lg px-8 py-5 flex justify-between items-center">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-800">Welcome back 👋</h2>
-        <p className="text-gray-500 mt-1">Track your finances smarter</p>
-      </div>
+    <header className="bg-white/80 backdrop-blur-2xl border border-pink-100 rounded-3xl shadow-xl px-6 md:px-8 py-5">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
 
-      <div className="flex items-center gap-5">
-        <div className="flex items-center bg-pink-50 border border-pink-100 rounded-2xl px-4 py-3 w-80">
-          <Search size={18} className="text-pink-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search transactions..."
-            className="bg-transparent outline-none ml-3 w-full"
-          />
+        {/* Left */}
+        <div>
+          <h1 className="text-3xl font-bold text-slate-800">
+            Welcome back 👋
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Track your finances smarter
+          </p>
         </div>
 
-        <div className="relative">
-          <button
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="bg-pink-50 border border-pink-100 p-4 rounded-2xl"
-          >
-            <Bell className="text-pink-500" size={20} />
+        {/* Right */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+
+          {/* Search */}
+          <div className="hidden md:flex items-center gap-3 bg-pink-50 border border-pink-100 rounded-2xl px-5 py-4 w-[420px]">
+            <Search size={20} className="text-pink-400" />
+            <input
+              type="text"
+              placeholder="Search transactions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent outline-none w-full text-slate-700"
+            />
+          </div>
+
+          {/* Notifications */}
+          <button className="relative p-4 rounded-2xl bg-pink-50 border border-pink-100 hover:bg-pink-100 transition">
+            <Bell size={20} className="text-pink-500" />
+            {transactions.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {transactions.length > 9 ? "9+" : transactions.length}
+              </span>
+            )}
           </button>
 
-          <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">
-            {notifications.length}
-          </span>
-
-          {showNotifications && <NotificationPanel notifications={notifications} />}
-        </div>
-
-        <button
-          onClick={() => {
-            localStorage.removeItem("transactions");
-            window.location.reload();
-          }}
-          className="bg-red-50 border border-red-100 px-5 py-3 rounded-2xl text-red-500 hover:bg-red-100"
-        >
-          Clear All
-        </button>
-
-        <div className="flex items-center gap-3">
+          {/* Settings */}
           <button
             onClick={onOpenSettings}
-            className="p-4 rounded-2xl border border-pink-100 bg-pink-50 hover:bg-pink-100"
+            className="p-4 rounded-2xl bg-pink-50 border border-pink-100 hover:bg-pink-100 transition"
           >
-            ⚙️
+            <Settings size={20} className="text-pink-500" />
           </button>
 
-          <div className="flex items-center gap-3 bg-pink-50 border border-pink-100 rounded-2xl px-4 py-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold">
+
+          {/* Profile */}
+          <div className="flex items-center gap-3 bg-white border border-pink-100 rounded-2xl px-4 py-3 shadow-sm">
+            <div className="w-11 h-11 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 flex items-center justify-center text-white font-bold">
               S
             </div>
-
-            <div>
+            <div className="hidden md:block">
               <p className="font-semibold text-slate-800">Smart User</p>
-              <p className="text-xs text-gray-500">Premium User</p>
+              <p className="text-xs text-gray-500">Premium Plan</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
