@@ -1,19 +1,16 @@
-import type { Expense } from './parser'
+import type { Transaction } from "../types";
 
-const KEY = 'expenses'
+const STORAGE_KEY = "expense_transactions";
 
-export function saveExpenses(expenses: Expense[]): void {
-  localStorage.setItem(KEY, JSON.stringify(expenses))
+export function saveTransactions(data: Transaction[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-export function loadExpenses(): Expense[] {
-  try {
-    return JSON.parse(localStorage.getItem(KEY) ?? '[]')
-  } catch {
-    return []
-  }
+export function loadTransactions(): Transaction[] {
+  const data = localStorage.getItem(STORAGE_KEY);
+  return data ? JSON.parse(data) : [];
 }
 
-export function clearExpenses(): void {
-  localStorage.removeItem(KEY)
+export function clearTransactions() {
+  localStorage.removeItem(STORAGE_KEY);
 }

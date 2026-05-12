@@ -1,37 +1,51 @@
-import type { Expense } from '../lib/parser'
+import type { Transaction } from "../types";
 
 interface Props {
-  expenses: Expense[]
+  transactions: Transaction[];
 }
 
-export default function MonthlyBreakdown({ expenses }: Props) {
-  const byMonth = expenses.reduce<Record<string, Record<string, number>>>((acc, e) => {
-    const month = e.date.slice(0, 7)
-    acc[month] ??= {}
-    acc[month][e.category] = (acc[month][e.category] ?? 0) + e.amount
-    return acc
-  }, {})
+export default function MonthlyBreakdown({ transactions }: Props) {
+  const grouped = transactions.reduce((acc, tx) => {
+    if (tx.type !== "expense") return acc;
 
-  const months = Object.keys(byMonth).sort()
-  if (!months.length) return null
+    const date = new Date(tx.date);
+    const monthKey = date.toLocaleString("en-IN", {
+      month: "short",
+      year: "numeric",
+    });
+
+    acc[monthKey] = (acc[monthKey] || 0) + tx.amount;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const data = Object.entries(grouped);
+  const max = Math.max(...data.map(([, v]) => v), 1);
 
   return (
-    <div className="rounded-xl bg-white p-4 shadow">
-      <h3 className="mb-4 font-semibold text-gray-700">Monthly Breakdown</h3>
+    <div className="bg-white/90 rounded-3xl shadow-lg p-6 border border-pink-100">
+      <h2 className="text-2xl font-bold mb-6 text-slate-800">
+        Monthly Breakdown
+      </h2>
+
       <div className="space-y-4">
-        {months.map((month) => (
+        {data.map(([month, amount]) => (
           <div key={month}>
-            <p className="mb-1 text-sm font-medium text-gray-600">{month}</p>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(byMonth[month]).map(([cat, amt]) => (
-                <span key={cat} className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700">
-                  {cat}: ${amt.toFixed(2)}
-                </span>
-              ))}
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">{month}</span>
+              <span className="text-pink-600 font-bold">
+                ₹{amount.toFixed(2)}
+              </span>
+            </div>
+
+            <div className="w-full bg-pink-100 rounded-full h-3">
+              <div
+                className="bg-pink-500 h-3 rounded-full"
+                style={{ width: `${(amount / max) * 100}%` }}
+              />
             </div>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }

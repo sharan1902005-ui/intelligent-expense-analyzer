@@ -1,29 +1,46 @@
-import type { Expense } from '../lib/parser'
+import type { Transaction } from "../types";
 
 interface Props {
-  expenses: Expense[]
+  transactions: Transaction[];
 }
 
-export default function SummaryCards({ expenses }: Props) {
-  const total = expenses.reduce((s, e) => s + e.amount, 0)
-  const avg = expenses.length ? total / expenses.length : 0
-  const max = expenses.length ? Math.max(...expenses.map((e) => e.amount)) : 0
+export default function SummaryCards({ transactions }: Props) {
+  const expenses = transactions.filter((t) => t.type === "expense");
+  const totalSpent = expenses.reduce((sum, t) => sum + t.amount, 0);
+
+  const categoryTotals: Record<string, number> = {};
+  expenses.forEach((t) => {
+    categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+  });
+
+  const topCategory =
+    Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0]?.[0] || "None";
+
+  const highestExpense = Math.max(...expenses.map((t) => t.amount), 0);
 
   const cards = [
-    { label: 'Total Spent', value: `$${total.toFixed(2)}` },
-    { label: 'Transactions', value: expenses.length },
-    { label: 'Avg per Transaction', value: `$${avg.toFixed(2)}` },
-    { label: 'Largest Expense', value: `$${max.toFixed(2)}` },
-  ]
+    { title: "Total Spent", value: totalSpent, prefix: "₹" },
+    { title: "Highest Expense", value: highestExpense, prefix: "₹" },
+  ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-      {cards.map((c) => (
-        <div key={c.label} className="rounded-xl bg-white p-4 shadow">
-          <p className="text-sm text-gray-500">{c.label}</p>
-          <p className="mt-1 text-2xl font-semibold text-gray-800">{c.value}</p>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {cards.map((card) => (
+        <div
+          key={card.title}
+          className="bg-white/90 backdrop-blur-2xl border border-pink-100 shadow-lg rounded-3xl p-6"
+        >
+          <h3 className="text-gray-500">{card.title}</h3>
+          <p className="text-3xl font-bold text-pink-600 mt-4">
+            {card.prefix}{card.value.toLocaleString()}
+          </p>
         </div>
       ))}
+
+      <div className="bg-white/90 backdrop-blur-2xl border border-pink-100 shadow-lg rounded-3xl p-6">
+        <h3 className="text-gray-500">Top Category</h3>
+        <p className="text-3xl font-bold text-pink-600 mt-4">{topCategory}</p>
+      </div>
     </div>
-  )
+  );
 }

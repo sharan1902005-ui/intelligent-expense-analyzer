@@ -1,60 +1,69 @@
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import type { Expense } from '../lib/parser'
-
-const COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6']
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import type { Transaction } from "../types";
 
 interface Props {
-  expenses: Expense[]
+  transactions: Transaction[];
 }
 
-export default function Charts({ expenses }: Props) {
-  const byCategory = Object.entries(
-    expenses.reduce<Record<string, number>>((acc, e) => {
-      acc[e.category] = (acc[e.category] ?? 0) + e.amount
-      return acc
-    }, {})
-  ).map(([name, value]) => ({ name, value: parseFloat(value.toFixed(2)) }))
+const COLORS = [
+  "#ec4899",
+  "#f472b6",
+  "#fb7185",
+  "#8b5cf6",
+  "#3b82f6",
+  "#10b981",
+  "#f59e0b",
+];
 
-  const byMonth = Object.entries(
-    expenses.reduce<Record<string, number>>((acc, e) => {
-      const month = e.date.slice(0, 7)
-      acc[month] = (acc[month] ?? 0) + e.amount
-      return acc
-    }, {})
-  )
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([name, value]) => ({ name, value: parseFloat(value.toFixed(2)) }))
+export default function Charts({ transactions }: Props) {
+  const expenses = transactions.filter((t) => t.type === "expense");
 
-  if (!expenses.length) return null
+  const grouped = expenses.reduce((acc, tx) => {
+    acc[tx.category] = (acc[tx.category] || 0) + tx.amount;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const data = Object.entries(grouped).map(([name, value]) => ({ name, value }));
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <div className="rounded-xl bg-white p-4 shadow">
-        <h3 className="mb-4 font-semibold text-gray-700">Spending by Category</h3>
-        <ResponsiveContainer width="100%" height={260}>
-          <PieChart>
-            <Pie data={byCategory} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
-              {byCategory.map((_, i) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(v: number) => `$${v}`} />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="bg-white/90 rounded-3xl shadow-lg p-6 border border-pink-100">
+      <h2 className="text-2xl font-bold text-slate-800 mb-2">
+        Category Distribution
+      </h2>
 
-      <div className="rounded-xl bg-white p-4 shadow">
-        <h3 className="mb-4 font-semibold text-gray-700">Monthly Spending</h3>
-        <ResponsiveContainer width="100%" height={260}>
-          <BarChart data={byMonth}>
-            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip formatter={(v: number) => `$${v}`} />
-            <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <p className="text-gray-500 mb-6">Where your money goes</p>
+
+      <ResponsiveContainer width="100%" height={420}>
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="45%"
+            innerRadius={90}
+            outerRadius={140}
+            paddingAngle={4}
+            dataKey="value"
+            label={({ name, percent }) =>
+              `${name} ${(percent * 100).toFixed(0)}%`
+            }
+          >
+            {data.map((_, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+
+          <Tooltip formatter={(value: number) => `₹${value.toFixed(2)}`} />
+
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
     </div>
-  )
+  );
 }

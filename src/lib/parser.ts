@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx'
-import { categorize } from './category'
+import { detectCategory } from './category'
 
 export interface Expense {
   date: string
@@ -19,7 +19,7 @@ export async function parseFile(file: File): Promise<Expense[]> {
       const desc = String(r['Description'] ?? r['description'] ?? r['Merchant'] ?? '')
       const amount = parseFloat(String(r['Amount'] ?? r['amount'] ?? r['Debit'] ?? 0))
       const date = String(r['Date'] ?? r['date'] ?? '')
-      return { date, description: desc, amount: Math.abs(amount), category: categorize(desc) }
+      return { date, description: desc, amount: Math.abs(amount), category: detectCategory(desc) }
     })
   }
 
@@ -53,7 +53,7 @@ function parseTextLines(text: string): Expense[] {
         date: dateMatch[1],
         description: desc,
         amount: parseFloat(amountMatch[1].replace(',', '')),
-        category: categorize(desc),
+        category: detectCategory(desc),
       }
     })
     .filter(Boolean) as Expense[]

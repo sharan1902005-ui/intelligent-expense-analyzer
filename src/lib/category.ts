@@ -1,19 +1,54 @@
-const rules: [RegExp, string][] = [
-  [/uber|lyft|taxi|transit|bus|train|fuel|gas station|shell|bp|chevron/i, 'Transport'],
-  [/restaurant|cafe|coffee|starbucks|mcdonald|pizza|food|dining|grubhub|doordash|uber eats/i, 'Food & Dining'],
-  [/amazon|walmart|target|costco|shop|store|market/i, 'Shopping'],
-  [/netflix|spotify|hulu|disney|subscription|apple|google play/i, 'Subscriptions'],
-  [/rent|mortgage|electric|water|internet|utility|comcast|at&t/i, 'Housing & Utilities'],
-  [/hospital|pharmacy|doctor|medical|health|cvs|walgreens/i, 'Health'],
-  [/gym|sport|fitness|yoga/i, 'Fitness'],
-  [/hotel|airbnb|flight|airline|travel|booking/i, 'Travel'],
-  [/insurance/i, 'Insurance'],
-  [/salary|payroll|deposit|income/i, 'Income'],
-]
+import type { Category } from "../types";
 
-export function categorize(description: string): string {
-  for (const [pattern, category] of rules) {
-    if (pattern.test(description)) return category
-  }
-  return 'Other'
+export function detectCategory(
+  merchant: string,
+  isIncome = false
+): Category {
+  const text = merchant.toLowerCase();
+
+  if (isIncome) return "Income";
+
+  if (
+    text.includes("swiggy") ||
+    text.includes("zomato") ||
+    text.includes("biryani") ||
+    text.includes("cafe") ||
+    text.includes("pizza")
+  )
+    return "Food";
+
+  if (
+    text.includes("uber") ||
+    text.includes("ola") ||
+    text.includes("petrol") ||
+    text.includes("fuel") ||
+    text.includes("metro")
+  )
+    return "Travel";
+
+  if (
+    text.includes("amazon") ||
+    text.includes("flipkart") ||
+    text.includes("myntra")
+  )
+    return "Shopping";
+
+  if (
+    text.includes("spotify") ||
+    text.includes("netflix") ||
+    text.includes("google play") ||
+    text.includes("youtube premium")
+  )
+    return "Subscription";
+
+  if (
+    text.includes("electricity") ||
+    text.includes("airtel") ||
+    text.includes("jio")
+  )
+    return "Bills";
+
+  if (text.includes("paid to")) return "Transfer";
+
+  return "Others";
 }
