@@ -66,11 +66,7 @@ const handleImport = (newData: Transaction[]) => {
     <DataInput onImport={handleImport} mode="pdf" />
   );
 
-  const totalSpent = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const filteredTransactions = transactions.filter((t) =>
+const filteredTransactions = transactions.filter((t) =>
     t.merchant.toLowerCase().includes(searchQuery.toLowerCase()) ||
     t.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
     t.amount.toString().includes(searchQuery) ||
@@ -131,7 +127,7 @@ const handleImport = (newData: Transaction[]) => {
                 {/* KPI */}
                 <SummaryCards transactions={filteredTransactions} budget={budget} />
 
-                <BudgetProgress transactions={filteredTransactions} budget={budget} />
+                <BudgetProgress transactions={filteredTransactions} budget={budget === "" ? 0 : budget} />
 
                 {/* Main Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
