@@ -125,7 +125,7 @@ const filteredTransactions = transactions.filter((t) =>
               <div className="space-y-8">
 
                 {/* KPI */}
-                <SummaryCards transactions={filteredTransactions} budget={budget} />
+                <SummaryCards transactions={filteredTransactions} budget={budget === "" ? 0 : budget} />
 
                 <BudgetProgress transactions={filteredTransactions} budget={budget === "" ? 0 : budget} />
 
