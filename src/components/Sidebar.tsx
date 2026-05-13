@@ -35,24 +35,24 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="md:hidden flex justify-between items-center px-5 py-4 bg-white border-b border-pink-100 sticky top-0 z-50">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
+      {/* Mobile Header */}
+      <div className="md:hidden sticky top-0 z-50 flex items-center justify-between px-4 py-4 bg-white/90 backdrop-blur-xl border-b border-pink-100 shadow-sm">
+        <h1 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
           SmartSpend AI
         </h1>
 
         <button
           onClick={() => setOpen(true)}
-          className="p-3 rounded-2xl bg-pink-50"
+          className="p-3 rounded-2xl bg-pink-50 hover:bg-pink-100 transition"
         >
-          <Menu size={24} />
+          <Menu size={22} />
         </button>
       </div>
 
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/30 z-40"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setOpen(false)}
         />
       )}
@@ -60,15 +60,18 @@ export default function Sidebar({
       {/* Sidebar */}
       <aside
         className={`
-          fixed md:relative top-0 left-0 h-full
-          w-72 bg-white/90 backdrop-blur-2xl
-          border-r border-pink-100 shadow-xl
+          fixed md:relative top-0 left-0 h-screen
+          w-[280px] md:w-72
+          bg-white/95 backdrop-blur-2xl
+          border-r border-pink-100
+          shadow-2xl md:shadow-xl
           z-50 p-6
-          transform transition-transform duration-300
+          transform transition-transform duration-300 ease-in-out
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0
         `}
       >
+        {/* Header */}
         <div className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
@@ -81,14 +84,15 @@ export default function Sidebar({
           </div>
 
           <button
-            className="md:hidden"
+            className="md:hidden p-2 rounded-xl hover:bg-pink-50"
             onClick={() => setOpen(false)}
           >
-            <X />
+            <X size={24} />
           </button>
         </div>
 
-        <nav className="space-y-4">
+        {/* Navigation */}
+        <nav className="space-y-3">
           {items.map((item) => {
             const active = activeTab === item.name;
 
@@ -100,11 +104,12 @@ export default function Sidebar({
                   setOpen(false);
                 }}
                 className={`
-                  w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition
+                  w-full flex items-center gap-4 px-5 py-4 rounded-2xl
+                  transition-all duration-200 font-medium
                   ${
                     active
-                      ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg"
-                      : "text-slate-700 hover:bg-pink-50"
+                      ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg scale-[1.02]"
+                      : "text-slate-700 hover:bg-pink-50 hover:scale-[1.01]"
                   }
                 `}
               >

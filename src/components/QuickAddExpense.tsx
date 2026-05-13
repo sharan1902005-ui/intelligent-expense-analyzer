@@ -31,7 +31,7 @@ export default function QuickAddExpense({ setTransactions }: Props) {
   };
 
   return (
-    <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8">
+    <div className="bg-white rounded-3xl shadow-xl border border-pink-100 p-7 h-auto">
       <div className="flex items-center gap-3 mb-6">
         <PlusCircle className="text-pink-500" />
         <h2 className="text-2xl font-bold text-slate-800">Quick Add Expense</h2>
@@ -43,7 +43,7 @@ export default function QuickAddExpense({ setTransactions }: Props) {
           placeholder="Merchant (e.g. Swiggy)"
           value={merchant}
           onChange={(e) => setMerchant(e.target.value)}
-          className="w-full px-5 py-4 rounded-2xl border border-pink-100 bg-white outline-none focus:ring-2 focus:ring-pink-300"
+          className="w-full px-5 py-3 rounded-2xl border border-pink-100 bg-white outline-none focus:ring-2 focus:ring-pink-300"
         />
 
         <input
@@ -51,13 +51,13 @@ export default function QuickAddExpense({ setTransactions }: Props) {
           placeholder="Amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full px-5 py-4 rounded-2xl border border-pink-100 bg-white outline-none focus:ring-2 focus:ring-pink-300"
+          className="w-full px-5 py-3 rounded-2xl border border-pink-100 bg-white outline-none focus:ring-2 focus:ring-pink-300"
         />
 
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value as Category)}
-          className="w-full px-5 py-4 rounded-2xl border border-pink-100 bg-white outline-none"
+          className="w-full px-5 py-3 rounded-2xl border border-pink-100 bg-white outline-none"
         >
           <option>Food</option>
           <option>Shopping</option>
@@ -73,13 +73,13 @@ export default function QuickAddExpense({ setTransactions }: Props) {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full px-5 py-4 rounded-2xl border border-pink-100 bg-white outline-none"
+          className="w-full px-5 py-3 rounded-2xl border border-pink-100 bg-white outline-none"
         />
 
         <button
           type="button"
           onClick={handleAdd}
-          className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 rounded-2xl font-semibold hover:scale-[1.02] transition"
+          className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3.5 rounded-2xl font-semibold hover:scale-[1.02] transition"
         >
           Add Expense
         </button>

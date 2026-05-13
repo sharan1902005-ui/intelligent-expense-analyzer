@@ -100,11 +100,11 @@ export default function DataInput({ onImport, mode = "both" }: Props) {
 
   if (mode === "csv") return (
     <label className="cursor-pointer">
-      <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 h-full">
-        <div className="text-4xl mb-4">📊</div>
+      <div className="bg-white rounded-3xl shadow-xl border border-pink-100 p-7 h-auto hover:shadow-2xl transition">
+        <div className="text-4xl mb-3">📊</div>
         <h3 className="text-xl font-semibold text-slate-800">CSV Upload</h3>
         <p className="text-gray-500 text-sm mt-2">Import spreadsheet transactions</p>
-        <div className="mt-5 px-4 py-3 rounded-2xl bg-pink-50 border border-pink-100 text-gray-500 text-sm">Select CSV file...</div>
+        <div className="mt-4 px-4 py-3 rounded-2xl bg-pink-50 border border-pink-100 text-gray-500 text-sm">Select CSV file...</div>
       </div>
       <input type="file" accept=".csv" className="hidden" onChange={handleCSV} />
     </label>
@@ -112,11 +112,11 @@ export default function DataInput({ onImport, mode = "both" }: Props) {
 
   if (mode === "pdf") return (
     <label className="cursor-pointer">
-      <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-pink-100 p-8 hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 h-full">
-        <div className="text-4xl mb-4">📄</div>
+      <div className="bg-white rounded-3xl shadow-xl border border-pink-100 p-7 h-auto hover:shadow-2xl transition">
+        <div className="text-4xl mb-3">📄</div>
         <h3 className="text-xl font-semibold text-slate-800">PDF Statement</h3>
         <p className="text-gray-500 text-sm mt-2">Upload bank statement PDF</p>
-        <div className="mt-5 px-4 py-3 rounded-2xl bg-pink-50 border border-pink-100 text-gray-500 text-sm">Select PDF file...</div>
+        <div className="mt-4 px-4 py-3 rounded-2xl bg-pink-50 border border-pink-100 text-gray-500 text-sm">Select PDF file...</div>
       </div>
       <input type="file" accept=".pdf" className="hidden" onChange={handlePDF} />
     </label>

@@ -4,7 +4,8 @@ import type { Transaction } from "../types";
 
 interface Props {
   transactions: Transaction[];
-  defaultOpen?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 interface Message {
@@ -12,9 +13,22 @@ interface Message {
   text: string;
 }
 
-export default function ExpenseChatBot({ transactions, defaultOpen = false }: Props) {
+export default function ExpenseChatBot({ transactions, isOpen, onClose }: Props) {
   const username = localStorage.getItem("username") || "there";
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(false);
+
+  const isControlled = isOpen !== undefined;
+  const visible = isControlled ? isOpen : open;
+
+  const handleClose = () => {
+    if (isControlled) onClose?.();
+    else setOpen(false);
+  };
+
+  const handleToggle = () => {
+    if (isControlled) onClose?.();
+    else setOpen((prev) => !prev);
+  };
   const [messages, setMessages] = useState<Message[]>([
     { sender: "bot", text: `Hi ${username} 👋 I'm your SmartSpend AI assistant. Ask about your spending.` },
   ]);
@@ -87,33 +101,36 @@ export default function ExpenseChatBot({ transactions, defaultOpen = false }: Pr
   return (
     <>
       <button
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-8 right-4 md:right-8 z-[9999] w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 shadow-2xl flex items-center justify-center text-white hover:scale-110 transition"
+        onClick={handleToggle}
+        className="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-[9999] w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 shadow-2xl flex items-center justify-center text-white hover:scale-110 transition"
       >
-        {open ? <X size={28} /> : <MessageCircle size={28} />}
+        {visible ? <X size={28} /> : <MessageCircle size={28} />}
       </button>
 
-      {open && (
-        <div className="fixed bottom-28 right-4 md:right-8 z-[9999] w-[92vw] md:w-[420px] h-[75vh] md:h-[600px] bg-white rounded-3xl shadow-2xl border border-pink-100 flex flex-col overflow-hidden">
-          <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-5">
-            <h2 className="text-xl font-bold">SmartSpend AI 🤖</h2>
-            <p className="text-sm opacity-90">Your finance assistant</p>
+      {visible && (
+        <div className="fixed bottom-36 md:bottom-28 right-4 md:right-8 z-[9999] w-[92vw] sm:w-[380px] md:w-[420px] h-[65vh] sm:h-[70vh] md:h-[600px] bg-white rounded-3xl shadow-2xl border border-pink-100 flex flex-col overflow-hidden">
+          <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-5 flex justify-between items-center">
+            <div>
+              <h2 className="text-lg md:text-xl font-bold">SmartSpend AI 🤖</h2>
+              <p className="text-sm opacity-90">Your finance assistant</p>
+            </div>
+            <button onClick={handleClose}><X size={20} /></button>
           </div>
 
-          <div className="p-4 flex flex-wrap gap-2 border-b bg-white">
-            <button onClick={() => askQuestion("total")} className="px-3 py-2 bg-pink-100 rounded-full text-sm hover:bg-pink-200">
+          <div className="p-3 md:p-4 flex flex-wrap gap-2 border-b bg-white">
+            <button onClick={() => askQuestion("total")} className="px-3 py-2 bg-pink-100 rounded-full text-xs md:text-sm hover:bg-pink-200 transition">
               💸 Total
             </button>
-            <button onClick={() => askQuestion("category")} className="px-3 py-2 bg-pink-100 rounded-full text-sm hover:bg-pink-200">
+            <button onClick={() => askQuestion("category")} className="px-3 py-2 bg-pink-100 rounded-full text-xs md:text-sm hover:bg-pink-200 transition">
               📊 Category
             </button>
-            <button onClick={() => askQuestion("highest")} className="px-3 py-2 bg-pink-100 rounded-full text-sm hover:bg-pink-200">
+            <button onClick={() => askQuestion("highest")} className="px-3 py-2 bg-pink-100 rounded-full text-xs md:text-sm hover:bg-pink-200 transition">
               🚨 Highest
             </button>
-            <button onClick={() => askQuestion("merchant")} className="px-3 py-2 bg-pink-100 rounded-full text-sm hover:bg-pink-200">
+            <button onClick={() => askQuestion("merchant")} className="px-3 py-2 bg-pink-100 rounded-full text-xs md:text-sm hover:bg-pink-200 transition">
               👤 Merchant
             </button>
-            <button onClick={() => askQuestion("recent")} className="px-3 py-2 bg-pink-100 rounded-full text-sm hover:bg-pink-200">
+            <button onClick={() => askQuestion("recent")} className="px-3 py-2 bg-pink-100 rounded-full text-xs md:text-sm hover:bg-pink-200 transition">
               🧾 Recent
             </button>
           </div>
@@ -121,7 +138,7 @@ export default function ExpenseChatBot({ transactions, defaultOpen = false }: Pr
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-pink-50">
             {messages.map((msg, index) => (
               <div key={index} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[75%] px-4 py-3 rounded-2xl ${msg.sender === "user" ? "bg-pink-500 text-white" : "bg-white shadow"}`}>
+                <div className={`max-w-[85%] md:max-w-[75%] px-4 py-3 rounded-2xl ${msg.sender === "user" ? "bg-pink-500 text-white" : "bg-white shadow"}`}>
                   <div className="flex gap-2 items-start">
                     {msg.sender === "bot" ? <Bot size={16} /> : <User size={16} />}
                     <span>{msg.text}</span>

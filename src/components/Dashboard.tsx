@@ -11,6 +11,9 @@ import TopNavbar from "./TopNavbar";
 import SettingsModal from "./SettingsModal";
 import QuickAddExpense from "./QuickAddExpense";
 import BudgetProgress from "./BudgetProgress";
+import SavingsCoach from "./SavingsCoach";
+import TopInsights from "./TopInsights";
+import BudgetTracker from "./BudgetTracker";
 import type { Transaction } from "../types";
 import jsPDF from "jspdf";
 
@@ -32,6 +35,20 @@ export default function Dashboard({ theme, setTheme }: { theme: string; setTheme
   }, [budget]);
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+const loadDemoData = () => {
+  const demoTransactions: Transaction[] = [
+    { id: crypto.randomUUID(), date: "2026-05-01", merchant: "Swiggy", amount: 320, category: "Food", type: "expense" },
+    { id: crypto.randomUUID(), date: "2026-05-02", merchant: "Uber", amount: 180, category: "Travel", type: "expense" },
+    { id: crypto.randomUUID(), date: "2026-05-03", merchant: "Netflix", amount: 649, category: "Subscription", type: "expense" },
+    { id: crypto.randomUUID(), date: "2026-05-04", merchant: "Amazon", amount: 1499, category: "Shopping", type: "expense" },
+    { id: crypto.randomUUID(), date: "2026-05-05", merchant: "Salary", amount: 25000, category: "Income", type: "income" },
+    { id: crypto.randomUUID(), date: "2026-05-06", merchant: "Electricity Board", amount: 1200, category: "Bills", type: "expense" },
+    { id: crypto.randomUUID(), date: "2026-05-07", merchant: "Zomato", amount: 450, category: "Food", type: "expense" },
+    { id: crypto.randomUUID(), date: "2026-05-08", merchant: "Spotify", amount: 119, category: "Subscription", type: "expense" },
+  ];
+  setTransactions(demoTransactions);
+};
 
 const handleImport = (newData: Transaction[]) => {
     setTransactions((prev) => {
@@ -85,13 +102,19 @@ const filteredTransactions = transactions.filter((t) =>
         }`}>
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="flex-1 p-6 md:p-8 md:ml-0">
-            <TopNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} transactions={transactions} onOpenSettings={() => setSettingsOpen(true)} exportPdfReport={exportPdfReport} />
-            <div className="mt-8">
+            <TopNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} transactions={transactions} budget={Number(budget) || 0} onOpenSettings={() => setSettingsOpen(true)} exportPdfReport={exportPdfReport} />
+            <div className="mt-6">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-slate-800">Start tracking your expenses</h2>
                 <p className="text-gray-500 mt-2">Upload statements or add expenses manually</p>
+                <button
+                  onClick={loadDemoData}
+                  className="px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 transition mt-4"
+                >
+                  Try Demo Data
+                </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
                 <CSVUploadCard />
                 <PDFUploadCard />
                 <QuickAddExpense setTransactions={setTransactions} />
@@ -117,9 +140,9 @@ const filteredTransactions = transactions.filter((t) =>
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <div className="flex-1 p-6 md:p-8 md:ml-0 overflow-auto">
-          <TopNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} transactions={transactions} onOpenSettings={() => setSettingsOpen(true)} exportPdfReport={exportPdfReport} />
+          <TopNavbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} transactions={transactions} budget={Number(budget) || 0} onOpenSettings={() => setSettingsOpen(true)} exportPdfReport={exportPdfReport} />
 
-          <div className="mt-8">
+          <div className="mt-6">
 
             {activeTab === "Dashboard" && (
               <div className="space-y-8">
@@ -130,7 +153,7 @@ const filteredTransactions = transactions.filter((t) =>
                 <BudgetProgress transactions={filteredTransactions} budget={budget === "" ? 0 : budget} />
 
                 {/* Main Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
                   <CSVUploadCard />
                   <PDFUploadCard />
                   <QuickAddExpense setTransactions={setTransactions} />
@@ -156,9 +179,20 @@ const filteredTransactions = transactions.filter((t) =>
 
             {activeTab === "Analytics" && (
               <div className="space-y-8">
-                <Charts transactions={filteredTransactions} />
-                <MonthlyBreakdown transactions={filteredTransactions} />
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  <Charts transactions={filteredTransactions} />
+                  <MonthlyBreakdown transactions={filteredTransactions} />
+                </div>
+                <TopInsights transactions={filteredTransactions} />
+                <BudgetTracker
+                  transactions={filteredTransactions}
+                  budget={Number(budget) || 0}
+                />
                 <AIInsights transactions={filteredTransactions} />
+                <SavingsCoach
+                  transactions={filteredTransactions}
+                  budget={Number(budget) || 0}
+                />
               </div>
             )}
 
@@ -172,7 +206,7 @@ const filteredTransactions = transactions.filter((t) =>
       </div>
 
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} theme={theme} setTheme={setTheme} budget={budget} setBudget={setBudget} />
-      <ExpenseChatBot transactions={transactions} defaultOpen={chatOpen} />
+      <ExpenseChatBot transactions={transactions} isOpen={chatOpen} onClose={() => setChatOpen(false)} />
     </>
   );
 }
