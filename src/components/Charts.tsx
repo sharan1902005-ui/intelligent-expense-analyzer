@@ -54,8 +54,8 @@ function ExpensePieChart({
             </Pie>
 
             <Tooltip
-              formatter={(value: number) =>
-                `₹${Number(value).toLocaleString()}`
+              formatter={(value) =>
+                `₹${Number(value ?? 0).toLocaleString()}`
               }
               contentStyle={{
                 borderRadius: "16px",
